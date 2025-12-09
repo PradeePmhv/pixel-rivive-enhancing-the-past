@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Revive</title>
+
+<style>
+body, html{
+  margin:0;padding:0;width:100%;height:100%;
+  font-family:Arial,sans-serif;overflow:hidden;
+}
+
+/* Background Videos */
+.video-background,.backend-video{
+  position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;
+}
+#backendVideo{display:none;}
+
+/* Login Page */
+.form-section{
+  display:flex;position:fixed;width:100%;height:100%;
+  background:rgba(0,0,0,.45);z-index:2;
+  flex-direction:column;justify-content:center;align-items:center;gap:20px;
+}
+.welcome-3d{
+  font-size:55px;color:white;font-weight:900;
+  margin-top:-200px;text-shadow:3px 3px 15px black;
+}
+.subtitle{font-size:26px;color:#7ecbff;margin-bottom:30px;}
+
+input{
+  padding:12px;width:300px;font-size:18px;border-radius:8px;border:1px solid white;
+}
+#submitForm{
+  padding:14px 40px;font-size:22px;background:#0a8f4d;color:white;
+  border:none;border-radius:8px;cursor:pointer;transition:.3s;
+}
+#submitForm:hover{background:#12b368;transform:scale(1.07);}
+
+/* Backend */
+.backend-section{
+  display:none;width:100%;height:100%;overflow:auto;
+  position:fixed;top:0;left:0;z-index:2;text-align:center;color:white;
+  padding:20px;background:rgba(0,0,0,.55);
+}
+.navbar{
+  background:#00000088;padding:15px;display:flex;justify-content:center;gap:50px;
+}
+.navbar a{
+  color:#7ecbff;font-size:20px;font-weight:bold;text-decoration:none;
+}
+.navbar a:hover{text-decoration:underline;}
+
+.content{display:none;margin-top:30px;}
+
+/* Upload container */
+.upload-section{
+  background:#4b3939e4;width:580px;margin:auto;padding:30px;border-radius:15px;
+}
+.upload-box{
+  border:3px dashed #7ecbff;padding:40px;border-radius:10px;background:#ffffff08;
+  cursor:pointer;transition:.3s;
+}
+.upload-box:hover{background:#7ecbff22;border-color:#ff7f50;}
+
+.upload-btn{
+  padding:12px 30px;background:#0a8f4d;color:white;border:none;
+  border-radius:8px;margin-top:15px;cursor:pointer;
+}
+.upload-btn:hover{background:#12b368;}
+
+.image-preview{
+  width:380px;border:2px solid #7ecbff;margin:15px;
+  border-radius:10px;background:rgba(0, 0, 0, 0.662);padding:10px;
+}
+.image-preview img{width:100%;border-radius:8px;}
+.result-container{display:flex;justify-content:center;flex-wrap:wrap;}
+.loading{color:#6db9ec;font-size:20px;margin-top:20px;}
+
+/* Button */
+.start-editing{
+  padding:16px 50px;color:#ffdddd;font-size:24px;border:none;border-radius:50px;
+  background:linear-gradient(90deg,#ff7f50,#ff0066,#8a2be2);
+  background-size:300% 300%;animation:spin 6s infinite linear;cursor:pointer;
+}
+@keyframes spin{
+  0%{background-position:0% 50%}
+ 50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+/* Neon Green Tick Glow */
+input[type="checkbox"]:checked{
+  accent-color:#00ff8871;
+  filter:drop-shadow(0px 0px 6px #174530);
+}
+input[type="checkbox"]:checked:hover{
+  transform:scale(1.15);
+  transition:.2s;
+}
+</style>
+</head>
+<body>
+
+<!-- FRONT VIDEO -->
+<video autoplay muted loop class="video-background" id="frontendVideo">
+  <source src="200609-913150862_large.mp4" type="video/mp4">
+</video>
+
+<!-- LOGIN -->
+<div class="form-section" id="formSection">
+  <h1 class="welcome-3d">WELCOME TO PIXEL REVIVE</h1>
+  <p class="subtitle">Login</p>
+
+  <input id="nameInput" type="text" placeholder="Enter your name">
+  <input id="emailInput" type="email" placeholder="Enter your email">
+  <button id="submitForm">Start</button>
+</div>
+
+<!-- BACKEND VIDEO -->
+<video autoplay muted loop class="backend-video" id="backendVideo">
+  <source src="1236-144355017_large.mp4" type="video/mp4">
+</video>
+
+<!-- APP -->
+<div class="backend-section" id="backendSection">
+
+<div class="navbar">
+  <a onclick="show('home')">Home</a>
+  <a onclick="show('editor')">Editor</a>
+  <a onclick="show('about')">About</a>
+</div>
+
+<!-- HOME -->
+<div id="home" class="content">
+  <h1>Welcome <span id="userName"></span> 👋</h1>
+  <button class="start-editing" onclick="show('editor')">Start Editing</button>
+</div>
+
+<!-- EDITOR -->
+<div id="editor" class="content">
+<h2>AI Image Restoration</h2>
+
+<div class="upload-section">
+
+  <div class="upload-box" onclick="fileInput.click()">
+    <h3 style="color:#7ecbff;">📁 Click to Upload Image</h3>
+  </div>
+
+  <button class="upload-btn" onclick="fileInput.click()">Choose File</button>
+  <p id="selectedFileName" style="color:#7ecbff;margin-top:10px;"></p>
+
+  <!-- Enhancement Options EXACTLY LIKE YOU WANT -->
+  <div style="
+    display:flex;flex-direction:column;
+    background:rgba(11, 10, 10, 0.884);padding:18px 25px;border-radius:10px;
+    width:max-content;margin:22px auto;color:#7c9898;font-size:18px;line-height:1.6;
+  ">
+    <label style="display:flex;align-items:center;">
+      <input id="scratch" type="checkbox" style="margin-right:8px;transform:scale(1.2);">
+      Remove Scratches
+    </label>
+
+    <label style="display:flex;align-items:center;margin-top:8px;">
+      <input id="enhance" type="checkbox" style="margin-right:8px;transform:scale(1.2);">
+      Enhance Quality
+    </label>
+
+    <label style="display:flex;align-items:center;margin-top:8px;">
+      <input id="color" type="checkbox" style="margin-right:8px;transform:scale(1.2);">
+      AI Colorize
+    </label>
+  </div>
+
+  <p style="font-size:14px;color:#7ecbff;">✨ GPEN Face Restoration Auto Applies</p>
+
+  <input id="fileInput" type="file" accept="image/*" style="display:none" onchange="upload()">
+</div>
+
+<p id="loading" class="loading" style="display:none;">⏳ Processing...</p>
+<div id="output" class="result-container"></div>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="content">
+<h2>About Pixel Revive</h2>
+<p style="max-width:850px;margin:auto;">
+To enhance the restoration quality of old photographs, an improved scratch removal algorithm was integrated into the Pixel Revive backend. The previous approach relied mainly on black-hat morphological detection, which often failed to accurately capture fine and diagonal scratches. The updated method uses a Top-Hat transformation with adaptive thresholding to highlight bright scratch lines more effectively. A refined binary mask is generated, cleaned using morphological operations, and then expanded to ensure full scratch coverage before applying OpenCV inpainting. This pipeline results in significantly better removal of fine scratches while preserving important image details. Additionally, a debugging feature was added to automatically save intermediate outputs such as grayscale, Top-Hat response, and final scratch mask, allowing easier tuning and performance analysis. Overall, the improved approach produces cleaner, smoother image results with noticeably fewer visible marks.
+</p><br>
+
+<h2 style="color:#7ecbff;">Our Team</h2><br>
+
+<div style="display:flex;justify-content:center;gap:40px;flex-wrap:wrap;">
+  <div><img src="Screenshot 2025-12-09 184913.png"
+    style="width:150px;height:150px;border-radius:50%;border:3px solid #7ecbff;object-fit:cover;"><h3>Pradeep</h3></div>
+
+  <div><img src="Screenshot 2025-12-09 121842.png"
+    style="width:150px;height:150px;border-radius:50%;border:3px solid #7ecbff;object-fit:cover;"><h3>Mohammad Anas</h3></div>
+
+  <div><img src="Screenshot 2025-12-09 184507.png"
+    style="width:150px;height:150px;border-radius:50%;border:3px solid #7ecbff;object-fit:cover;"><h3>Reehan</h3></div>
+
+  <div><img src="Screenshot 2025-12-09 121823.png"
+    style="width:150px;height:150px;border-radius:50%;border:3px solid #7ecbff;object-fit:cover;"><h3>Sajjad</h3></div>
+</div>
+</div>
+
+</div>
+
+<script>
+submitForm.onclick=()=>{
+  if(!nameInput.value) return alert("Enter Name");
+  if(!emailInput.value.includes("@")) return alert("Enter Valid Email");
+
+  userName.innerText=nameInput.value;
+  formSection.style.display="none";
+  backendSection.style.display="block";
+  frontendVideo.style.display="none";
+  backendVideo.style.display="block";
+  show('home');
+}
+
+function show(p){
+  document.querySelectorAll('.content').forEach(x=>x.style.display="none");
+  document.getElementById(p).style.display="block";}
+
+function upload(){
+  let f=fileInput.files[0]; if(!f) return;
+  selectedFileName.innerText="Uploaded: "+f.name;
+  loading.style.display="block"; output.innerHTML="";
+
+  let form=new FormData();
+  form.append("image",f);
+  form.append("remove_scratches",scratch.checked);
+  form.append("enhance_quality",enhance.checked);
+  form.append("colorize",color.checked);
+
+  fetch("http://localhost:5000/api/restore",{method:"POST",body:form})
+  .then(r=>r.json()).then(d=>{
+    loading.style.display="none";
+    if(!d.success) return alert(d.error);
+
+    output.innerHTML=`
+    <div class='image-preview'><h3>Original</h3><img src="http://localhost:5000${d.input_image}"></div>
+    <div class='image-preview'><h3>Processed</h3><img src="http://localhost:5000${d.restored_image}">
+    <br><a href="http://localhost:5000${d.restored_image}" download style="color:#7ecbff">📥 Download</a></div>`;
+  })
+}
+</script>
+</body>
+</html>
